@@ -5,6 +5,11 @@ public class Player {
     private String name;
     private int currentPosition;
 
+    public Player(String name){
+        this.name = name;
+        this.currentPosition = 1;
+    }
+
     public String getName() {
         return name;
     }

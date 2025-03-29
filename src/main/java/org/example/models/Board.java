@@ -15,7 +15,13 @@ public class Board{
         boardEntityMap = new HashMap<>();
 //        Initialize 'n' snakes and 'n' ladders
 
-//        Add 'n' snakes , start > end
+//        Add 'n' snakes and 'n' ladders
+        addSnakesAndLadders();
+
+
+    }
+
+    private void addSnakesAndLadders(){
         for(int i = 0 ; i < dimension ; i++){
             int min = 2;
             int max = cellCount - 1;
@@ -28,12 +34,59 @@ public class Board{
             if(!hasSnakeOrLadder(start)){
                 boardEntityMap.put(start,new Snake(start,end));
             }
-        }
 
+//            Ladder -> end > start
+            max = cellCount - 1;
+            end = (int)(Math.floor(Math.random() * (max - min + 1) + min));
+            max = end - 1;
+            start = (int)(Math.floor(Math.random() * (max - min + 1) + min));
+
+            if(!hasSnakeOrLadder(start)){
+                boardEntityMap.put(start,new Ladder(start,end));
+            }
+
+        }
     }
 
-    private boolean hasSnakeOrLadder(int index){
+    public boolean hasSnakeOrLadder(int index){
         return boardEntityMap.containsKey(index);
+    }
+
+    public void print(){
+        int tempCellCount = cellCount;
+        int index;
+        for (int row = 0; row < dimension; row++) {
+            // Print left to right if even row, right to left if odd
+            if (row % 2 == 0) {
+                for (int col = 0; col < dimension; col++) {
+                    index = tempCellCount;
+
+                    System.out.printf("%4d", tempCellCount);
+
+                    if (hasSnakeOrLadder(index)) {
+                        BoardEntity entity = boardEntityMap.get(index);
+                        entity.printEntity();
+                    }
+
+                    tempCellCount-=1;
+                }
+            } else {
+                int temp = tempCellCount - dimension+ 1;
+                for (int col = 0; col < dimension; col++) {
+
+                    System.out.printf("%4d", temp);
+
+                    if (hasSnakeOrLadder(temp)) {
+                        BoardEntity entity = boardEntityMap.get(temp);
+                        entity.printEntity();
+                    }
+
+                    temp+=1;
+                }
+                tempCellCount -= dimension;
+            }
+            System.out.println(); // New line for each row
+        }
     }
 
     public int getDimension() {
